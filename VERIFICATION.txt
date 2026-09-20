@@ -1,0 +1,46 @@
+鹈鹕邮局 · 验证与回退记录
+
+实现分支：feature/pelican-island
+完成分支：main（通过测试后快进合并）
+变化字段：body[data-stage] 从 baseline 变为 island；新增三维模型、岛屿环境、骑行状态、视角、车铃、晨昏和手记交互。
+
+四个交付文件
+MODIFIED_FILE: /Users/jingtianyu/Documents/Codex/pelican-cycle/index.html
+DIFF_FILE: /Users/jingtianyu/Documents/Codex/pelican-cycle/changes.diff
+VERIFICATION.txt: /Users/jingtianyu/Documents/Codex/pelican-cycle/VERIFICATION.txt
+ROLLBACK.sh: /Users/jingtianyu/Documents/Codex/pelican-cycle/ROLLBACK.sh
+
+保留的原始文件：/Users/jingtianyu/Documents/Codex/pelican-cycle/.checkpoints/baseline.html
+原始 SHA256：b1cf4c41ef556570ca75c56ccdb488b280c39d99debf3fd0e9a5b089967d7558
+交付 SHA256：d200a4070437e306968414ee0912ddc5e3198416284261a4d8502d5100ebd57a
+
+BASELINE
+命令：node /Users/jingtianyu/Documents/Codex/pelican-cycle/verify.cjs baseline
+输入：/Users/jingtianyu/Documents/Codex/pelican-cycle/.checkpoints/baseline.html；预期 data-stage=baseline；浏览器离线模式。
+实际输出：PASS baseline
+退出状态：0
+
+MODIFIED
+命令：node /Users/jingtianyu/Documents/Codex/pelican-cycle/verify.cjs modified
+输入：/Users/jingtianyu/Documents/Codex/pelican-cycle/index.html；预期 data-stage=island；浏览器离线模式。
+实际输出：PASS modified
+退出状态：0
+验证项：WebGL 场景成功、两只车轮、两条腿、前进、暂停、速度、晨昏、车铃反馈、手记开关、角色近景、拖动、缩放、归位、键盘、390×844 布局、减少动态效果默认暂停；未捕获到页面脚本异常。
+视觉检查：1440×960 全景与落日近景；390×844 小岛与角色近景。
+车铃验证包含可见反馈及音频 API 无脚本异常；未以自动化测试断言扬声器实际发声。
+
+ROLLBACK
+准备命令：cp /Users/jingtianyu/Documents/Codex/pelican-cycle/index.html /Users/jingtianyu/Documents/Codex/pelican-cycle/.checkpoints/rollback-test.html
+命令：/Users/jingtianyu/Documents/Codex/pelican-cycle/ROLLBACK.sh /Users/jingtianyu/Documents/Codex/pelican-cycle/.checkpoints/rollback-test.html
+输入：完整页面的另一份测试副本。
+实际输出：PASS rollback: baseline restored
+退出状态：0
+复验命令：node /Users/jingtianyu/Documents/Codex/pelican-cycle/verify.cjs rollback
+复验输入：/Users/jingtianyu/Documents/Codex/pelican-cycle/.checkpoints/rollback-test.html
+实际输出：PASS baseline
+退出状态：0
+恢复行为：测试副本恢复为“鹈鹕邮局 · 场景待构建”，data-stage=baseline；恢复副本与原始基线逐字节一致。
+保留行为：真正交付的 index.html 仍为完整三维小岛，data-stage=island；未被回退。
+回退脚本在覆盖前自动另存目标当前版本，且先验证原始基线哈希。
+
+重开核验：四份文件均已读回；index.html 无外部资源依赖；ROLLBACK.sh 有可执行权限。

@@ -1,3 +1,6 @@
 .DS_Store
 .checkpoints/three.min.js
 .checkpoints/rollback-test.html
+
+.checkpoints/*.before-rollback.*
+.checkpoints/closeup.png
